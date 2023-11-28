@@ -1,12 +1,13 @@
 package com.awsfinal.awsfinalfront.models;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Getter
+@Setter
 public class UserDTO {
     private String dni;
     private String firstName;
@@ -16,4 +17,5 @@ public class UserDTO {
     private String phoneNumber;
     private Profession profession;
     private boolean userStatus;
+    private boolean editing;
 }

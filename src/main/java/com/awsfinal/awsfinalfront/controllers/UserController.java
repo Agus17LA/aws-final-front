@@ -40,6 +40,7 @@ public class UserController {
     @GetMapping("/edit")
     public String editUserForm(@RequestParam("dni") String userDni, Model model) {
         UserDTO user = userService.getUserByDni(userDni);
+        user.setEditing(true);
         model.addAttribute("user",user);
         return "userForm";
     }
@@ -50,10 +51,13 @@ public class UserController {
             ResponseEntity<UserDTO> validationResponse = validationService.validateUser(user).block();
             if (validationResponse.getStatusCode().is2xxSuccessful()) {
                 UserDTO newUser = validationResponse.getBody();
-                if(userService.getUserByDni(newUser.getDni()) == null){
+                if(userService.getUserByDni(newUser.getDni()) == null){ //si el dni no existe en la base de datos, significa que estamos agregando usuario nuevo
                     userService.saveUser(newUser);
-                }else{
+                }else if(user.isEditing()){ //si figura el flag de edit, y el DNI en cuestion figura en la base de datos, sigifnica que estamos editando
                     userService.patchUser(newUser);
+                    user.setEditing(false);
+                }else{ //si no esta el flag activado, significa que estamos intentando agregar un nuevo usuario pero que su DNI ya existe en la base de datos
+                    model.addAttribute("errorMessage", "DNI existente");
                 }
                 model.addAttribute("users", userService.getAllUsers());
                 return "users";

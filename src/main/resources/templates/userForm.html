@@ -7,6 +7,7 @@
 <body>
 <h1>Formulario de Usuario</h1>
 <form th:action="@{/save}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{editing}" />
     <div>
         <label for="dni">DNI:</label>
         <input type="text" th:field="*{dni}" id="dni"/>
