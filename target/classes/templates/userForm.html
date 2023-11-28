@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario de Usuario</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+<h1>Formulario de Usuario</h1>
+<form th:action="@{/save}" th:object="${user}" method="post">
+    <div>
+        <label for="dni">DNI:</label>
+        <input type="text" th:field="*{dni}" id="dni"/>
+    </div>
+    <div>
+        <label for="firstName">Nombre:</label>
+        <input type="text" th:field="*{firstName}" id="firstName" />
+    </div>
+    <div>
+        <label for="lastName">Apellido:</label>
+        <input type="text" th:field="*{lastName}" id="lastName"/>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" th:field="*{email}" id="email" />
+    </div>
+    <div>
+        <label for="birthdate">Fecha de nacimiento:</label>
+        <input type="date" th:field="*{birthdate}" id="birthdate"/>
+    </div>
+    <div>
+        <label for="phoneNumber">Teléfono:</label>
+        <input type="text" th:field="*{phoneNumber}" id="phoneNumber"/>
+    </div>
+    <div>
+        <label for="profession">Profesion:</label>
+        <input type="text" th:field="*{profession.professionName}" id="profession"/>
+    </div>
+    <button type="submit">Guardar</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var errorMessage = [[${errorMessage}]];
+        if (errorMessage) {
+            alert(errorMessage);
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+<h1>Usuarios</h1>
+<table>
+    <thead>
+    <tr>
+        <th>DNI</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Email</th>
+        <th>Fecha de nacimiento</th>
+        <th>Telefono</th>
+        <th>Profesion</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}" th:if="${user.userStatus}">
+
+        <td th:text="${user.dni}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.birthdate}"></td>
+        <td th:text="${user.phoneNumber}"></td>
+        <td th:text="${user.profession.professionName}"></td>
+        <td>
+            <a th:href="@{/edit(dni=${user.dni})}">Modificar</a>
+            <a th:href="@{/delete(dni=${user.dni})}">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<button><a href="/new">Agregar Nuevo Usuario</a></button>
+</body>
+</html>

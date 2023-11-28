@@ -1,0 +1,7 @@
+com\awsfinal\awsfinalfront\services\ValidationService.class
+com\awsfinal\awsfinalfront\controllers\UserController.class
+com\awsfinal\awsfinalfront\models\Profession.class
+com\awsfinal\awsfinalfront\configuration\WebClientConfig.class
+com\awsfinal\awsfinalfront\services\UserService.class
+com\awsfinal\awsfinalfront\AwsFinalFrontApplication.class
+com\awsfinal\awsfinalfront\models\UserDTO.class
