@@ -1,14 +1,19 @@
 package com.awsfinal.awsfinalfront.controllers;
 
+import com.awsfinal.awsfinalfront.exceptions.ApiError;
 import com.awsfinal.awsfinalfront.models.UserDTO;
 import com.awsfinal.awsfinalfront.services.UserService;
 import com.awsfinal.awsfinalfront.services.ValidationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -51,23 +56,26 @@ public class UserController {
             ResponseEntity<UserDTO> validationResponse = validationService.validateUser(user).block();
             if (validationResponse.getStatusCode().is2xxSuccessful()) {
                 UserDTO newUser = validationResponse.getBody();
-                if(userService.getUserByDni(newUser.getDni()) == null){ //si el dni no existe en la base de datos, significa que estamos agregando usuario nuevo
+                if (newUser == null) {
+                    model.addAttribute("errorMessage", "Error: No se recibió un usuario válido");
+                } else if (userService.getUserByDni(newUser.getDni()) == null) {
                     userService.saveUser(newUser);
-                }else if(user.isEditing()){ //si figura el flag de edit, y el DNI en cuestion figura en la base de datos, sigifnica que estamos editando
+                } else if (user.isEditing()) {
                     userService.patchUser(newUser);
                     user.setEditing(false);
-                }else{ //si no esta el flag activado, significa que estamos intentando agregar un nuevo usuario pero que su DNI ya existe en la base de datos
+                } else {
                     model.addAttribute("errorMessage", "DNI existente");
                 }
-                model.addAttribute("users", userService.getAllUsers());
-                return "users";
+            } else {
+                model.addAttribute("errorMessage", "Error inesperado en la validación");
             }
-        }catch (Exception ex){
-            model.addAttribute("errorMessage", ex.getMessage());
+        } catch (WebClientResponseException.BadRequest ex) {
+            model.addAttribute("errorMessage", "Error de validación: " + ex.getResponseBodyAsString());
         }
         model.addAttribute("users", userService.getAllUsers());
         return "users";
     }
+
 
     @GetMapping("/delete")
     public String deleteUser(@RequestParam("dni") String dni, Model model) {
